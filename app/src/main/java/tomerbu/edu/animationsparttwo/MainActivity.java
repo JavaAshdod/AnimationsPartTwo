@@ -12,6 +12,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.BounceInterpolator;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -20,16 +23,16 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Animator cloud1Animator;
-    private Animator cloud2Animator;
-    private Animator cloud3Animator;
-    private Animator cloud4Animator;
 
     private ImageView ivCloud1;
     private ImageView ivCloud2;
     private ImageView ivCloud3;
     private ImageView ivCloud4;
     private RelativeLayout layout;
+    private EditText etEmail;
+    private EditText etPassword;
+    private Button btnLogin;
+
 
     //1)
     @Override
@@ -51,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
         ivCloud3 = (ImageView) findViewById(R.id.ivCloud3);
         ivCloud4 = (ImageView) findViewById(R.id.ivCloud4);
         layout = (RelativeLayout) findViewById(R.id.layout);
+
+        etEmail = (EditText) findViewById(R.id.etEmail);
+        etPassword = (EditText) findViewById(R.id.etPassword);
+        btnLogin = (Button) findViewById(R.id.btnLogin);
     }
 
     private void animateClouds(View... cloudViews) {
@@ -85,13 +92,48 @@ public class MainActivity extends AppCompatActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
-        ivCloud1.setX( 0 - ivCloud1.getWidth());
-        ivCloud2.setX( 0 - ivCloud2.getWidth());
-        ivCloud3.setX( 0 - ivCloud3.getWidth());
-        ivCloud4.setX( 0 - ivCloud4.getWidth());
-
+        moveViewOut(ivCloud1, ivCloud2, ivCloud3, ivCloud4);
         animateClouds(ivCloud1, ivCloud2, ivCloud3, ivCloud4);
 
+        moveViewOut(etEmail, etPassword, btnLogin);
+        animateLogin();
+
+    }
+
+    private void animateLogin() {
+        float xMid = layout.getWidth() / 2;
+        float xet = xMid - etEmail.getWidth() / 2;
+        float x2 = xet + etEmail.getWidth();
+        float xBtn = x2 - btnLogin.getWidth();
+
+        ObjectAnimator etEmailAnimator = ObjectAnimator.ofFloat(etEmail, "X", xet);
+        etEmailAnimator.setInterpolator(new BounceInterpolator());
+        etEmailAnimator.setDuration(1000);
+        etEmailAnimator.start();
+
+
+        ObjectAnimator etPasswordAnimator = ObjectAnimator.ofFloat(etPassword, "X", xet);
+        etPasswordAnimator.setInterpolator(new BounceInterpolator());
+        etPasswordAnimator.setDuration(1000);
+        etPasswordAnimator.setStartDelay(700);
+        etPasswordAnimator.start();
+
+
+        ObjectAnimator btnAnimator = ObjectAnimator.ofFloat(btnLogin, "X", xBtn);
+        btnAnimator.setInterpolator(new BounceInterpolator());
+        btnAnimator.setDuration(1000);
+        btnAnimator.setStartDelay(1500);
+        btnAnimator.start();
+
+
+    }
+
+
+
+    void moveViewOut(View... views) {
+        for (View v : views) {
+            v.setX(0 - v.getWidth());
+        }
     }
 
     @Override
