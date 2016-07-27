@@ -36,9 +36,10 @@ public class ExplodeActivity extends AppCompatActivity {
     private void animateExplode() {
         Intent intent = new Intent(this, CircularActivity.class);
 
+        //set the transition
         getWindow().setExitTransition(new Explode());
-
         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this, fab, "fab").toBundle();
+
         startActivity(intent, bundle);
     }
 
