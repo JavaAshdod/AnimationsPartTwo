@@ -13,11 +13,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="reveal"
+        android:transitionName="fab"
         android:src="@mipmap/ic_launcher"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/view" />
+        android:id="@+id/view"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <RelativeLayout
         android:visibility="invisible"
@@ -53,6 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Button"
+            android:onClick="gotoMain"
             android:id="@+id/button3"
             android:layout_below="@+id/button2"
             android:layout_alignParentRight="true"
