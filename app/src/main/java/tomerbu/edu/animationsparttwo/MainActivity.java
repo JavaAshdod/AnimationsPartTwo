@@ -2,6 +2,8 @@ package tomerbu.edu.animationsparttwo;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,6 +13,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView ivCloud2;
     private ImageView ivCloud3;
     private ImageView ivCloud4;
+    private RelativeLayout layout;
 
     //1)
     @Override
@@ -34,45 +41,57 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        cloud1Animator = AnimatorInflater.loadAnimator(this, R.animator.move_cloud);
-        cloud2Animator = AnimatorInflater.loadAnimator(this, R.animator.move_cloud2);
-        cloud3Animator = AnimatorInflater.loadAnimator(this, R.animator.move_cloud3);
-        cloud4Animator = AnimatorInflater.loadAnimator(this, R.animator.move_cloud4);
-        animateClouds();
+
     }
+
 
     private void findViews() {
         ivCloud1 = (ImageView) findViewById(R.id.ivCloud1);
         ivCloud2 = (ImageView) findViewById(R.id.ivCloud2);
         ivCloud3 = (ImageView) findViewById(R.id.ivCloud3);
         ivCloud4 = (ImageView) findViewById(R.id.ivCloud4);
+        layout = (RelativeLayout) findViewById(R.id.layout);
     }
 
-    private void animateClouds() {
-        cloud1Animator.setTarget(ivCloud1);
-        cloud1Animator.start();
+    private void animateClouds(View... cloudViews) {
+        Random rand = new Random();
+        for (View cloudView : cloudViews) {
 
-        cloud2Animator.setTarget(ivCloud2);
-        cloud2Animator.start();
+            int layoutWidth = layout.getWidth();
+            int cloudWidth = cloudView.getWidth();
 
-        cloud3Animator.setTarget(ivCloud3);
-        cloud3Animator.start();
+            float startCloudPosition = 0 - cloudWidth;
+            float finalCloudPosition = layoutWidth + cloudWidth;
 
-        cloud4Animator.setTarget(ivCloud4);
-        cloud4Animator.start();
 
+            ObjectAnimator cloudAnimator = ObjectAnimator.ofFloat(cloudView, "X", startCloudPosition, finalCloudPosition);
+            cloudAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+            cloudAnimator.setRepeatMode(ValueAnimator.RESTART);
+            cloudAnimator.setDuration(6000 + rand.nextInt(3000));
+            cloudAnimator.setStartDelay(rand.nextInt(2000));
+            cloudAnimator.start();
+
+        }
     }
 
-    //2)
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
 
     //3)
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        ivCloud1.setX( 0 - ivCloud1.getWidth());
+        ivCloud2.setX( 0 - ivCloud2.getWidth());
+        ivCloud3.setX( 0 - ivCloud3.getWidth());
+        ivCloud4.setX( 0 - ivCloud4.getWidth());
+
+        animateClouds(ivCloud1, ivCloud2, ivCloud3, ivCloud4);
+
     }
 
     @Override
